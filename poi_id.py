@@ -293,8 +293,8 @@ for l in univariate_result:
 
 # My selected feature list
 features_list = ['poi','total_stock_value','exercised_stock_options','bonus','deferred_income','long_term_incentive',
-                    'restricted_stock','salary','total_payments','other', 'shared_receipt_with_poi','fraction_from_this_person_to_poi'
-                         ]
+                    'restricted_stock','salary','total_payments','other', 'shared_receipt_with_poi']
+                         
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 
@@ -357,7 +357,7 @@ print"\n==============GaussianNB============="
 gauss = GaussianNB()
 nb_pipe = Pipeline([('scaler', MinMaxScaler()),('selection', SelectKBest()),('pca', PCA()),('naive_bayes', gauss)])
 
-nb_parameters = [{ 'selection__k': [9,10,11], 'pca__n_components': [6,7,8] }]
+nb_parameters = [{ 'selection__k': [8,9,10], 'pca__n_components': [6,7,8] }]
 
 nb_grid = GridSearchCV(estimator = nb_pipe,\
                         param_grid = nb_parameters,\
@@ -417,8 +417,17 @@ svc_best_estimator = svc_grid.best_estimator_
 print(svc_best_estimator)
 
 
-###test_classifier(nb_grid.best_estimator_, my_dataset, features_list)
+test_classifier(nb_grid.best_estimator_, my_dataset, features_list)
 
-### Dump your classifier, dataset, and features_list so anyone can
+#Checking the affect of new feature on the final classifier
+
+test_features_list = ['poi','total_stock_value','exercised_stock_options','bonus','deferred_income','long_term_incentive',
+    'restricted_stock','salary','total_payments','other', 'shared_receipt_with_poi','fraction_from_this_person_to_poi']
+
+print "\n=================Effect of new feature on final classifier================="
+
+test_classifier(nb_grid.best_estimator_, my_dataset, test_features_list)
+
+###Task 6: Dump your classifier, dataset, and features_list so anyone can
 
 dump_classifier_and_data(nb_grid.best_estimator_, my_dataset, features_list)
